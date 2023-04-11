@@ -1,0 +1,16 @@
+household <- read.table('./household_power_consumption.txt', sep = ";", header = TRUE)
+household$Date <- as.Date(household$Date, format = "%d/%m/%Y")
+required_date = household$Date == "2007-02-01" | household$Date == "2007-02-02"
+household_data <- household[required_date,]
+household_data$Global_active_power <- as.numeric(household_data$Global_active_power)
+xtick <- seq(0,  length(household_data$Global_active_power), by = length(household_data$Global_active_power)/ 2)
+xlabels <- c ('Thu', "Fri", 'Sat')
+ytick <- seq(0,30, by = 10)
+with(household_data, plot(Sub_metering_1 , type="l", xaxt = "n", yaxt = "n", xlab = "", ylab="Energy sub metering"))
+with(household_data, lines(Sub_metering_2 , type="l", col = "red"))
+with(household_data, lines(Sub_metering_3 , type="l", col = "blue"))
+axis(side=1, at=xtick, labels = xlabels)
+axis(side=2 , at=ytick, labels = ytick)
+legend('topright', legend = c('Sub_metering_1', 'Sub_metering_2', 'Sub_metering_3'), lty = c(1,1,1), pch = c(NA, NA, NA) , col = c('black', 'red', 'blue'))
+dev.copy(png, file="plot3.png")
+dev.off()
